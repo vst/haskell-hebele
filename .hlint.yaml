@@ -1,0 +1,32 @@
+############################
+# HLint Configuration File #
+############################
+
+# See https://github.com/ndmitchell/hlint
+
+#######################
+# MODULE RESTRICTIONS #
+#######################
+
+- modules:
+  - { name: Control.Monad.Error, within: [] }
+
+##########################
+# EXTENSION RESTRICTIONS #
+##########################
+
+- extensions:
+  - default: false # All extension are banned by default
+  - name:
+    - QuasiQuotes
+    - TypeApplications
+
+################
+# CUSTOM RULES #
+################
+
+# Replace a $ b $ c with a . b $ c
+- group: { name: dollar, enabled: true }
+
+# Generalise map to fmap, ++ to <>
+- group: { name: generalise, enabled: true }
