@@ -2,13 +2,13 @@
 {-# LANGUAGE TypeApplications #-}
 
 -- | This module provides top-level definitions for the CLI program.
-module Hebele.Hubele.Programs.Cli where
+module Hebele.Hubele.App.Cli where
 
 import Control.Applicative ((<**>))
 import Control.Monad (join)
 import qualified Data.List
 import Data.String.Interpolate (i)
-import Hebele.Hubele.Version (versionString)
+import Hebele.Hubele.Core (versionString)
 import qualified Options.Applicative as OA
 import qualified Options.Applicative.Help as OA.Help
 import System.Exit (ExitCode (..))

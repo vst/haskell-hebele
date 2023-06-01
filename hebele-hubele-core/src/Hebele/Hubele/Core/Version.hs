@@ -1,9 +1,9 @@
 -- | This module provides application version related definitions.
-module Hebele.Hubele.Version where
+module Hebele.Hubele.Core.Version where
 
 import qualified Data.Text as T
 import Data.Version (Version, showVersion)
-import qualified Paths_hebele_hubele as Paths
+import qualified Paths_hebele_hubele_core as Paths
 
 
 -- | Application version.

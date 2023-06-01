@@ -1,4 +1,4 @@
-name: hebele-hubele
+name: hebele-hubele-app-cli
 version: 0.0.0
 github: "vst/haskell-hebele-hubele"
 license: MIT
@@ -6,10 +6,7 @@ author: "Vehbi Sinan Tunalioglu"
 maintainer: "vst@vsthost.com"
 copyright: "Copyright (c) 2023 Vehbi Sinan Tunalioglu"
 
-extra-source-files:
-  - CHANGELOG.md
-  - LICENSE
-  - README.md
+extra-source-files: []
 
 description: Please see the README on GitHub at <https://github.com/vst/haskell-hebele-hubele#readme>
 
@@ -23,12 +20,12 @@ library:
     - -Werror
     - -Wunused-packages
   dependencies:
+    - hebele-hubele-core
     - optparse-applicative
     - string-interpolate
-    - text
 
 executables:
-  hebele-hubele:
+  hebele-hubele-app-cli:
     main: Main.hs
     source-dirs: app
     ghc-options:
@@ -39,10 +36,10 @@ executables:
       - -rtsopts
       - -with-rtsopts=-N
     dependencies:
-      - hebele-hubele
+      - hebele-hubele-app-cli
 
 tests:
-  hebele-hubele-test:
+  hebele-hubele-app-cli-test:
     main: Spec.hs
     source-dirs: test/spec
     ghc-options:
@@ -54,7 +51,7 @@ tests:
       - -with-rtsopts=-N
     dependencies: []
 
-  hebele-hubele-doctest:
+  hebele-hubele-app-cli-doctest:
     main: doctest.hs
     source-dirs: test/doctest
     ghc-options:
@@ -62,5 +59,6 @@ tests:
       - -Werror
       - -threaded
     dependencies:
-      - hebele-hubele
+      - hebele-hubele-core
+      - hebele-hubele-app-cli
       - doctest

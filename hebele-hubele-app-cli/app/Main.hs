@@ -1,6 +1,6 @@
 module Main where
 
-import qualified Hebele.Hubele.Programs.Cli as Cli
+import qualified Hebele.Hubele.App.Cli as Cli
 import System.Exit (exitWith)
 
 
