@@ -18,9 +18,15 @@
 - extensions:
   - default: false # All extension are banned by default
   - name:
+    - DataKinds
+    - DeriveGeneric
+    - GeneralizedNewtypeDeriving
+    - OverloadedLists
     - OverloadedStrings
     - QuasiQuotes
+    - RecordWildCards
     - TypeApplications
+    - TypeOperators
 
 ################
 # CUSTOM RULES #

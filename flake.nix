@@ -10,7 +10,11 @@
     {
       system = builtins.currentSystem;
       devShell = thisDrv.shell;
-      defaultPackage = thisDrv.application;
+      defaultPackage = thisDrv.appCli;
+      packages = {
+        cli = thisDrv.appCli;
+        server = thisDrv.appServer;
+      };
     }
   );
 }

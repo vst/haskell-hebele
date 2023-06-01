@@ -1,0 +1,76 @@
+name: hebele-hubele-app-server
+version: 0.0.0
+github: "vst/haskell-hebele-hubele"
+license: MIT
+author: "Vehbi Sinan Tunalioglu"
+maintainer: "vst@vsthost.com"
+copyright: "Copyright (c) 2023 Vehbi Sinan Tunalioglu"
+
+extra-source-files: []
+
+description: Please see the README on GitHub at <https://github.com/vst/haskell-hebele-hubele#readme>
+
+dependencies:
+  - base >= 4.7 && < 5
+
+library:
+  source-dirs: src
+  ghc-options:
+    - -Wall
+    - -Werror
+    # - -Wunused-packages
+  dependencies:
+    - aeson
+    - hebele-hubele-core
+    - hebele-hubele-domain
+    - lens
+    - openapi3
+    - optparse-applicative
+    - servant-openapi3
+    - servant-server
+    - servant-swagger-ui
+    - string-interpolate
+    - text
+    - time
+    - wai
+    - wai-logger
+    - warp
+
+
+executables:
+  hebele-hubele-app-server:
+    main: Main.hs
+    source-dirs: app
+    ghc-options:
+      - -Wall
+      - -Werror
+      - -Wunused-packages
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+    dependencies:
+      - hebele-hubele-app-server
+
+tests:
+  hebele-hubele-app-server-test:
+    main: Spec.hs
+    source-dirs: test/spec
+    ghc-options:
+      - -Wall
+      - -Werror
+      - -Wunused-packages
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+    dependencies: []
+
+  hebele-hubele-app-server-doctest:
+    main: doctest.hs
+    source-dirs: test/doctest
+    ghc-options:
+      - -Wall
+      - -Werror
+      - -threaded
+    dependencies:
+      - hebele-hubele-app-server
+      - doctest
