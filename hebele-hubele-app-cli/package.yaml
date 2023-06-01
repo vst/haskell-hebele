@@ -21,8 +21,10 @@ library:
     - -Wunused-packages
   dependencies:
     - hebele-hubele-core
+    - hebele-hubele-domain
     - optparse-applicative
     - string-interpolate
+    - text
 
 executables:
   hebele-hubele-app-cli:
@@ -59,6 +61,5 @@ tests:
       - -Werror
       - -threaded
     dependencies:
-      - hebele-hubele-core
       - hebele-hubele-app-cli
       - doctest

@@ -4,14 +4,17 @@
 -- | This module provides top-level definitions for the CLI program.
 module Hebele.Hubele.App.Cli where
 
-import Control.Applicative ((<**>))
+import Control.Applicative ((<**>), (<|>))
 import Control.Monad (join)
 import qualified Data.List
 import Data.String.Interpolate (i)
+import qualified Data.Text as T
 import Hebele.Hubele.Core (versionString)
+import qualified Hebele.Hubele.Domain as Domain
 import qualified Options.Applicative as OA
 import qualified Options.Applicative.Help as OA.Help
 import System.Exit (ExitCode (..))
+import System.IO (hPutStrLn, stderr)
 
 
 -- * Program
@@ -31,7 +34,7 @@ runCli = join $ OA.execParser (OA.info opts desc)
 
 -- | CLI option parser for top-level commands.
 optProgram :: OA.Parser (IO ExitCode)
-optProgram = command
+optProgram = commandInfo <|> commandCodec
 
 
 -- | Footer message for the top-level commands help page.
@@ -65,23 +68,23 @@ fringilla eros ac nisl tempus, nec suscipit metus gravida.
 
 
 -- | Provides top-level command for information related subcommands.
-command :: OA.Parser (IO ExitCode)
-command =
+commandInfo :: OA.Parser (IO ExitCode)
+commandInfo =
   mkSubCommand
     "info"
     parser
     "Information Commands"
     "This command provides information subcommands."
   where
-    parser = subcommandVersion
+    parser = subcommandInfoVersion
 
 
 -- *** info version
 
 
 -- | @version@ subcommand definition.
-subcommandVersion :: OA.Parser (IO ExitCode)
-subcommandVersion =
+subcommandInfoVersion :: OA.Parser (IO ExitCode)
+subcommandInfoVersion =
   mkSubCommand
     "version"
     parser
@@ -100,6 +103,80 @@ programVersion f =
       OutputFormatText -> versionString
       OutputFormatJson -> [i|{"version": "#{versionString}"}|]
       OutputFormatYaml -> [i|version: "#{versionString}"|]
+
+
+-- ** codec
+
+
+-- | Provides top-level command for codec related subcommands.
+commandCodec :: OA.Parser (IO ExitCode)
+commandCodec =
+  mkSubCommand
+    "codec"
+    parser
+    "Base64 Codec Commands"
+    "This command provides base64 codec subcommands."
+  where
+    parser = subcommandCodecEncode <|> subcommandCodecDecode
+
+
+-- *** codec encode
+
+
+-- | @encode@ subcommand definition.
+subcommandCodecEncode :: OA.Parser (IO ExitCode)
+subcommandCodecEncode =
+  mkSubCommand
+    "encode"
+    parser
+    "Encode Text"
+    "This command base64-encodes a given text. Text can be given via the command line option or standard input."
+  where
+    parser =
+      programCodecEncode
+        <$> OA.optional (OA.strOption $ OA.short 't' <> OA.long "text" <> OA.metavar "TEXT" <> OA.help "Text to encode")
+
+
+-- | @encode@ subcommand program.
+programCodecEncode :: Maybe T.Text -> IO ExitCode
+programCodecEncode mT = do
+  textPlain <- maybe readPlainText (pure . Domain.PlainText) mT
+  let textBase64 = Domain.encodePlainText textPlain
+  putStrLn (T.unpack (Domain.unBase64Text textBase64))
+  pure ExitSuccess
+  where
+    readPlainText = Domain.PlainText . T.pack <$> getContents
+
+
+-- *** codec decode
+
+
+-- | @decode@ subcommand definition.
+subcommandCodecDecode :: OA.Parser (IO ExitCode)
+subcommandCodecDecode =
+  mkSubCommand
+    "decode"
+    parser
+    "Decode Text"
+    "This command decodes a given base64-encoded text. Text can be given via the command line option or standard input."
+  where
+    parser =
+      programCodecDecode
+        <$> OA.optional (OA.strOption $ OA.short 't' <> OA.long "text" <> OA.metavar "TEXT" <> OA.help "Text to decode")
+
+
+-- | @decode@ subcommand program.
+programCodecDecode :: Maybe T.Text -> IO ExitCode
+programCodecDecode mT = do
+  eTextBase64 <- Domain.mkBase64Text . T.strip <$> maybe readText pure mT
+  case eTextBase64 of
+    Left err -> putStrLn (T.unpack err) >> pure (ExitFailure 1)
+    Right st -> do
+      let textPlainText = Domain.decodeBase64Text st
+      hPutStrLn stderr (T.unpack (Domain.unPlainText textPlainText))
+      pure ExitSuccess
+  where
+    readText = T.pack <$> getContents
 
 
 -- * Helpers

@@ -30,8 +30,10 @@ library
   build-depends:
       base >=4.7 && <5
     , hebele-hubele-core
+    , hebele-hubele-domain
     , optparse-applicative
     , string-interpolate
+    , text
   default-language: Haskell2010
 
 executable hebele-hubele-app-cli
@@ -58,7 +60,6 @@ test-suite hebele-hubele-app-cli-doctest
       base >=4.7 && <5
     , doctest
     , hebele-hubele-app-cli
-    , hebele-hubele-core
   default-language: Haskell2010
 
 test-suite hebele-hubele-app-cli-test
