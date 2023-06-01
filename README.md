@@ -62,14 +62,15 @@ Re-generate `.cabal` file if and when required:
 
 ```sh
 hpack hebele-hubele-core
+hpack hebele-hubele-domain
 hpack hebele-hubele-app-cli
 ```
 
 Reformat, lint, build and test codebase, respectively:
 
 ```sh
-fourmolu -i hebele-hubele-core/**/*.hs hebele-hubele-app-cli/**/*.hs
-hlint hebele-hubele-core/{src,test} hebele-hubele-app-cli/{app,src,test}
+fourmolu -i hebele-hubele-core/**/*.hs hebele-hubele-domain/**/*.hs hebele-hubele-app-cli/**/*.hs
+hlint hebele-hubele-core/{src,test} hebele-hubele-domain/{src,test} hebele-hubele-app-cli/{app,src,test}
 cabal build -O0 all
 cabal test -O0 all ## TODO: Fix doctest failure due to *Paths_* usage.
 ```

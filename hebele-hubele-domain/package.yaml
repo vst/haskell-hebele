@@ -1,0 +1,48 @@
+name: hebele-hubele-domain
+version: 0.0.0
+github: "vst/haskell-hebele-hubele"
+license: MIT
+author: "Vehbi Sinan Tunalioglu"
+maintainer: "vst@vsthost.com"
+copyright: "Copyright (c) 2023 Vehbi Sinan Tunalioglu"
+
+extra-source-files: []
+
+description: Please see the README on GitHub at <https://github.com/vst/haskell-hebele-hubele#readme>
+
+dependencies:
+  - base >= 4.7 && < 5
+
+library:
+  source-dirs: src
+  ghc-options:
+    - -Wall
+    - -Werror
+    - -Wunused-packages
+  dependencies:
+    - base64
+    - text
+
+tests:
+  hebele-hubele-domain-test:
+    main: Spec.hs
+    source-dirs: test/spec
+    ghc-options:
+      - -Wall
+      - -Werror
+      - -Wunused-packages
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+    dependencies: []
+
+  hebele-hubele-domain-doctest:
+    main: doctest.hs
+    source-dirs: test/doctest
+    ghc-options:
+      - -Wall
+      - -Werror
+      - -threaded
+    dependencies:
+      - hebele-hubele-domain
+      - doctest

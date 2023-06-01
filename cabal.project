@@ -1,3 +1,4 @@
 packages:
   hebele-hubele-core/
+  hebele-hubele-domain/
   hebele-hubele-app-cli/

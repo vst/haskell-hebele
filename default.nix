@@ -18,6 +18,7 @@ let
   thisProject = (thisHaskell.override {
     overrides = self: super: with pkgs.haskell.lib; {
       hebele-hubele-core = self.callCabal2nix "hebele-hubele-core" ./hebele-hubele-core { };
+      hebele-hubele-domain = self.callCabal2nix "hebele-hubele-domain" ./hebele-hubele-domain { };
       hebele-hubele-app-cli = self.callCabal2nix "hebele-hubele-app-cli" ./hebele-hubele-app-cli { };
     };
   }).extend (pkgs.haskell.lib.packageSourceOverrides { });
@@ -27,6 +28,7 @@ let
     ## Define packages for the shell:
     packages = p: [
       p.hebele-hubele-core
+      p.hebele-hubele-domain
       p.hebele-hubele-app-cli
     ];
 
