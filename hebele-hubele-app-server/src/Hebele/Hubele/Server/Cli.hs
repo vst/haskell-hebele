@@ -3,7 +3,11 @@ module Hebele.Hubele.Server.Cli where
 
 import Control.Applicative ((<**>))
 import Control.Monad (join)
+import qualified Data.Text as T
+import qualified Data.Text.Encoding as TE
+import qualified Hasql.Pool
 import Hebele.Hubele.Core (versionString)
+import Hebele.Hubele.Server.Internal.HebeleM (Env (..))
 import qualified Hebele.Hubele.Server.Web as Web
 import qualified Network.Wai.Handler.Warp as Warp
 import qualified Options.Applicative as OA
@@ -33,11 +37,14 @@ optProgram =
       OA.auto
       ( OA.short 'p' <> OA.long "port" <> OA.metavar "PORT" <> OA.value 3000 <> OA.showDefault <> OA.help "Port to run Web server on"
       )
+    <*> OA.strOption (OA.short 'd' <> OA.long "database" <> OA.metavar "DATABASE" <> OA.help "Database URI")
 
 
 -- | Program.
-program :: Warp.Port -> IO ExitCode
-program p = Web.runWebServer p >> pure ExitSuccess
+program :: Warp.Port -> T.Text -> IO ExitCode
+program p dbUri = do
+  pool <- Hasql.Pool.acquire 2 Nothing (TE.encodeUtf8 dbUri)
+  Web.runWebServer p (Env pool) >> pure ExitSuccess
 
 
 -- * Helpers

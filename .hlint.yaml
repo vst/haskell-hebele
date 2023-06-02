@@ -20,12 +20,19 @@
   - name:
     - DataKinds
     - DeriveGeneric
+    - FlexibleContexts
+    - FlexibleInstances
+    - GADTs
     - GeneralizedNewtypeDeriving
+    - InstanceSigs
     - OverloadedLists
     - OverloadedStrings
     - QuasiQuotes
     - RecordWildCards
+    - ScopedTypeVariables
+    - StandaloneDeriving
     - TypeApplications
+    - TypeFamilies
     - TypeOperators
 
 ################

@@ -7,7 +7,7 @@
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE TypeOperators #-}
 
-module Hebele.Hubele.Server.Web.Internal where
+module Hebele.Hubele.Server.Web.Api where
 
 import Control.Lens ((&), (.~), (?~))
 import Control.Monad.IO.Class (MonadIO (..))
@@ -20,6 +20,9 @@ import qualified Data.Text as T
 import qualified Data.Time as Time
 import GHC.Generics (Generic)
 import qualified Hebele.Hubele.Core as Core
+import Hebele.Hubele.Server.Internal.HebeleM (Env, HebeleM, runHebeleM)
+import qualified Hebele.Hubele.Server.Internal.Types as Types
+import Hebele.Hubele.Server.Web.Auth (authContext, mkAuthServerContext)
 import qualified Network.Wai.Handler.Warp as Warp
 import qualified Network.Wai.Logger as Wai.Logger
 import Servant ((:<|>) ((:<|>)), (:>))
@@ -32,20 +35,25 @@ import qualified Servant.Swagger.UI
 
 
 -- | Runs the Web server on the given port.
-runWebServer :: Warp.Port -> IO ()
-runWebServer port = do
+runWebServer :: Warp.Port -> Env -> IO ()
+runWebServer port env = do
   putStrLn [i|Web server is now running on Port #{port}|]
   Wai.Logger.withStdoutLogger $ \logger -> do
     let settings = Warp.setPort port . Warp.setLogger logger $ Warp.defaultSettings
-    Warp.runSettings settings apiApplication
+    Warp.runSettings settings (apiApplication env)
 
 
 -- * Top-Level Application
 
 
 -- | Provides the API application.
-apiApplication :: Servant.Application
-apiApplication = Servant.serve apiProxy apiHandler
+apiApplication :: Env -> Servant.Application
+apiApplication env =
+  Servant.serveWithContext apiProxy (mkAuthServerContext env) $
+    Servant.hoistServerWithContext api authContext (liftIO . runHebeleM env) server
+  where
+    apiProxy = Servant.Proxy :: Servant.Proxy Api
+    server = apiHandler
 
 
 -- | API type definition.
@@ -53,12 +61,12 @@ type Api = ApiCore :<|> ApiDocs
 
 
 -- | API definition.
-apiProxy :: Servant.Proxy Api
-apiProxy = Servant.Proxy
+api :: Servant.Proxy Api
+api = Servant.Proxy
 
 
 -- | API request handler.
-apiHandler :: Servant.Server Api
+apiHandler :: Servant.ServerT Api HebeleM
 apiHandler = apiHandlerCore :<|> apiDocsServer
 
 
@@ -75,7 +83,7 @@ apiProxyCore = Servant.Proxy
 
 
 -- | Core API server implementation.
-apiHandlerCore :: Servant.Server ApiCore
+apiHandlerCore :: Servant.ServerT ApiCore HebeleM
 apiHandlerCore = apiHandlerCoreInformational
 
 
@@ -83,7 +91,7 @@ apiHandlerCore = apiHandlerCoreInformational
 
 
 -- | Core API type definition.
-type ApiCoreInformational = ApiVersion :<|> ApiInfo
+type ApiCoreInformational = ApiVersion :<|> ApiInfo :<|> ApiMe
 
 
 -- | Core API definition.
@@ -92,8 +100,8 @@ apiProxyCoreInformational = Servant.Proxy
 
 
 -- | Core API server implementation.
-apiHandlerCoreInformational :: Servant.Server ApiCoreInformational
-apiHandlerCoreInformational = apiHandlerVersion :<|> apiHandlerInfo
+apiHandlerCoreInformational :: Servant.ServerT ApiCoreInformational HebeleM
+apiHandlerCoreInformational = apiHandlerVersion :<|> apiHandlerInfo :<|> apiHandlerMe
 
 
 -- *** /version
@@ -175,6 +183,28 @@ instance OpenApi.ToSchema InfoData where
         & OpenApi.required .~ ["version", "timestamp"]
 
 
+-- *** /me
+
+
+-- | API type definition for @/me@.
+type ApiMe =
+  "me"
+    :> Servant.AuthProtect "hebele-hubele-auth"
+    :> Servant.Summary "Authenticated User Endpoint"
+    :> Servant.Description "This endpoint returns authenticated user information."
+    :> Servant.Get '[Servant.JSON] Types.User
+
+
+-- | API definition for @/me@.
+apiProxyMe :: Servant.Proxy ApiMe
+apiProxyMe = Servant.Proxy
+
+
+-- | API request handler for @/me@.
+apiHandlerMe :: Servant.ServerT ApiMe HebeleM
+apiHandlerMe = pure
+
+
 -- * API Documentation
 
 
@@ -207,5 +237,5 @@ openapi =
 
 
 -- | API documentation server implementation.
-apiDocsServer :: Servant.Server ApiDocs
-apiDocsServer = Servant.Swagger.UI.swaggerSchemaUIServer openapi
+apiDocsServer :: Servant.ServerT ApiDocs HebeleM
+apiDocsServer = Servant.Swagger.UI.swaggerSchemaUIServerT openapi

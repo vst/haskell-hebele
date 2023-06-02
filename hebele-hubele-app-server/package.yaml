@@ -18,20 +18,30 @@ library:
   ghc-options:
     - -Wall
     - -Werror
-    # - -Wunused-packages
+    - -Wunused-packages
   dependencies:
     - aeson
+    - base64-bytestring
+    - bytestring
+    - cryptonite
+    - exceptions
+    - hasql
+    - hasql-pool
+    - hasql-th
     - hebele-hubele-core
-    - hebele-hubele-domain
+    - insert-ordered-containers
     - lens
+    - mtl
     - openapi3
     - optparse-applicative
+    - profunctors
     - servant-openapi3
     - servant-server
     - servant-swagger-ui
     - string-interpolate
     - text
     - time
+    - uuid
     - wai
     - wai-logger
     - warp

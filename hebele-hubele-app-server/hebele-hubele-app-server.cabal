@@ -22,27 +22,42 @@ source-repository head
 library
   exposed-modules:
       Hebele.Hubele.Server.Cli
+      Hebele.Hubele.Server.Internal.Algebra
+      Hebele.Hubele.Server.Internal.Exception
+      Hebele.Hubele.Server.Internal.HebeleM
+      Hebele.Hubele.Server.Internal.Types
       Hebele.Hubele.Server.Web
-      Hebele.Hubele.Server.Web.Internal
+      Hebele.Hubele.Server.Web.Api
+      Hebele.Hubele.Server.Web.Auth
   other-modules:
       Paths_hebele_hubele_app_server
   hs-source-dirs:
       src
-  ghc-options: -Wall -Werror
+  ghc-options: -Wall -Werror -Wunused-packages
   build-depends:
       aeson
     , base >=4.7 && <5
+    , base64-bytestring
+    , bytestring
+    , cryptonite
+    , exceptions
+    , hasql
+    , hasql-pool
+    , hasql-th
     , hebele-hubele-core
-    , hebele-hubele-domain
+    , insert-ordered-containers
     , lens
+    , mtl
     , openapi3
     , optparse-applicative
+    , profunctors
     , servant-openapi3
     , servant-server
     , servant-swagger-ui
     , string-interpolate
     , text
     , time
+    , uuid
     , wai
     , wai-logger
     , warp

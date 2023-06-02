@@ -49,6 +49,9 @@ let
       thisProject.haskell-language-server
       thisProject.hlint
       thisProject.hpack
+
+      ## Database related inputs:
+      (import ./nix/ext/atlasgo.nix { pkgs = pkgs; })
     ];
 
     ## Shell hook for development shell:

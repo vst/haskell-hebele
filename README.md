@@ -94,3 +94,14 @@ Run applications:
 cabal run -O0 hebele-hubele-app-cli -- --help
 cabal run -O0 hebele-hubele-app-server -- --help
 ```
+
+Also:
+
+- Create a PostgreSQL database `haskell-hebele-hubele`. Check
+  `./database/atlas.hcl` for assumptions.
+- Apply database migrations:
+
+    ```sh
+    cd database/
+    atlas migrate apply --env dev
+    ```
