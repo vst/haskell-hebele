@@ -14,8 +14,8 @@ nix-build -A appServer
 Run applications:
 
 ```sh
-./result/bin/hebele-hubele-app-cli --help
-./result/bin/hebele-hubele-app-server --help
+./result/bin/hebele-app-cli --help
+./result/bin/hebele-app-server --help
 ```
 
 Install applications:
@@ -37,8 +37,8 @@ nix build .#server
 Run applications:
 
 ```sh
-./result/bin/hebele-hubele-app-cli --help
-./result/bin/hebele-hubele-app-server --help
+./result/bin/hebele-app-cli --help
+./result/bin/hebele-app-server --help
 ```
 
 Install applications:
@@ -67,17 +67,17 @@ First, enter Nix shell:
 Re-generate `.cabal` file if and when required:
 
 ```sh
-hpack hebele-hubele-core
-hpack hebele-hubele-domain
-hpack hebele-hubele-app-cli
-hpack hebele-hubele-app-server
+hpack hebele-core
+hpack hebele-domain
+hpack hebele-app-cli
+hpack hebele-app-server
 ```
 
 Reformat, lint, build and test codebase, respectively:
 
 ```sh
-fourmolu -i hebele-hubele-core/**/*.hs hebele-hubele-domain/**/*.hs hebele-hubele-app-cli/**/*.hs hebele-hubele-app-server/**/*.hs
-hlint hebele-hubele-core/{src,test} hebele-hubele-domain/{src,test} hebele-hubele-app-cli/{app,src,test} hebele-hubele-app-server/{app,src,test}
+fourmolu -i hebele-core/**/*.hs hebele-domain/**/*.hs hebele-app-cli/**/*.hs hebele-app-server/**/*.hs
+hlint hebele-core/{src,test} hebele-domain/{src,test} hebele-app-cli/{app,src,test} hebele-app-server/{app,src,test}
 cabal build -O0 all
 cabal test -O0 all ## TODO: Fix doctest failure due to *Paths_* usage.
 ```
@@ -91,13 +91,13 @@ cabal haddock -O0 all
 Run applications:
 
 ```sh
-cabal run -O0 hebele-hubele-app-cli -- --help
-cabal run -O0 hebele-hubele-app-server -- --help
+cabal run -O0 hebele-app-cli -- --help
+cabal run -O0 hebele-app-server -- --help
 ```
 
 Also:
 
-- Create a PostgreSQL database `haskell-hebele-hubele`. Check
+- Create a PostgreSQL database `haskell-hebele`. Check
   `./database/atlas.hcl` for assumptions.
 - Apply database migrations:
 

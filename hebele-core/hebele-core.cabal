@@ -1,0 +1,60 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.35.2.
+--
+-- see: https://github.com/sol/hpack
+
+name:           hebele-core
+version:        0.0.0
+description:    Please see the README on GitHub at <https://github.com/vst/haskell-hebele#readme>
+homepage:       https://github.com/vst/haskell-hebele#readme
+bug-reports:    https://github.com/vst/haskell-hebele/issues
+author:         Vehbi Sinan Tunalioglu
+maintainer:     vst@vsthost.com
+copyright:      Copyright (c) 2023 Vehbi Sinan Tunalioglu
+license:        MIT
+build-type:     Simple
+
+source-repository head
+  type: git
+  location: https://github.com/vst/haskell-hebele
+
+library
+  exposed-modules:
+      Hebele.Core
+      Hebele.Core.Version
+  other-modules:
+      Paths_hebele_core
+  hs-source-dirs:
+      src
+  ghc-options: -Wall -Werror -Wunused-packages
+  build-depends:
+      base >=4.7 && <5
+    , text
+  default-language: Haskell2010
+
+test-suite hebele-core-doctest
+  type: exitcode-stdio-1.0
+  main-is: doctest.hs
+  other-modules:
+      Paths_hebele_core
+  hs-source-dirs:
+      test/doctest
+  ghc-options: -Wall -Werror -threaded
+  build-depends:
+      base >=4.7 && <5
+    , doctest
+    , hebele-core
+  default-language: Haskell2010
+
+test-suite hebele-core-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_hebele_core
+  hs-source-dirs:
+      test/spec
+  ghc-options: -Wall -Werror -Wunused-packages -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+  default-language: Haskell2010

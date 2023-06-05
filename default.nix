@@ -19,10 +19,10 @@ let
     overrides = self: super: with pkgs.haskell.lib; {
       openapi3 = pkgs.haskell.lib.dontCheck (pkgs.haskell.lib.unmarkBroken super.openapi3);
 
-      hebele-hubele-core = self.callCabal2nix "hebele-hubele-core" ./hebele-hubele-core { };
-      hebele-hubele-domain = self.callCabal2nix "hebele-hubele-domain" ./hebele-hubele-domain { };
-      hebele-hubele-app-cli = self.callCabal2nix "hebele-hubele-app-cli" ./hebele-hubele-app-cli { };
-      hebele-hubele-app-server = self.callCabal2nix "hebele-hubele-app-server" ./hebele-hubele-app-server { };
+      hebele-core = self.callCabal2nix "hebele-core" ./hebele-core { };
+      hebele-domain = self.callCabal2nix "hebele-domain" ./hebele-domain { };
+      hebele-app-cli = self.callCabal2nix "hebele-app-cli" ./hebele-app-cli { };
+      hebele-app-server = self.callCabal2nix "hebele-app-server" ./hebele-app-server { };
     };
   }).extend (pkgs.haskell.lib.packageSourceOverrides { });
 
@@ -30,10 +30,10 @@ let
   thisShell = thisProject.shellFor {
     ## Define packages for the shell:
     packages = p: [
-      p.hebele-hubele-core
-      p.hebele-hubele-domain
-      p.hebele-hubele-app-cli
-      p.hebele-hubele-app-server
+      p.hebele-core
+      p.hebele-domain
+      p.hebele-app-cli
+      p.hebele-app-server
     ];
 
     ## Enable Hoogle:
@@ -74,7 +74,7 @@ let
 
       ## Post-fixup process:
       extraPostFixup = ''
-        wrapProgram $out/bin/hebele-hubele-app-cli --prefix PATH : ${binPath}
+        wrapProgram $out/bin/hebele-app-cli --prefix PATH : ${binPath}
       '';
     in
     rec {
@@ -84,7 +84,7 @@ let
   );
 
   ## Get the installable application (only static executable):
-  thisAppCli = pkgs.haskell.lib.justStaticExecutables (makeThisAppCliInstallable thisProject.hebele-hubele-app-cli);
+  thisAppCli = pkgs.haskell.lib.justStaticExecutables (makeThisAppCliInstallable thisProject.hebele-app-cli);
 
   ## Define a function that makes this server application installable in Nix environment:
   makeThisAppServerInstallable = drv: drv.overrideAttrs (oldAttrs:
@@ -100,7 +100,7 @@ let
 
       ## Post-fixup process:
       extraPostFixup = ''
-        wrapProgram $out/bin/hebele-hubele-app-server --prefix PATH : ${binPath}
+        wrapProgram $out/bin/hebele-app-server --prefix PATH : ${binPath}
       '';
     in
     rec {
@@ -110,11 +110,11 @@ let
   );
 
   ## Get the installable application (only static executable):
-  thisAppServer = pkgs.haskell.lib.justStaticExecutables (makeThisAppServerInstallable thisProject.hebele-hubele-app-server);
+  thisAppServer = pkgs.haskell.lib.justStaticExecutables (makeThisAppServerInstallable thisProject.hebele-app-server);
 
   ## Note: You may wish to use following to disable checks instead:
   ##
-  ## (pkgs.haskell.lib.dontCheck thisProject.hebele-hubele-app-cli)
+  ## (pkgs.haskell.lib.dontCheck thisProject.hebele-app-cli)
 in
 if pkgs.lib.inNixShell then thisShell else {
   shell = thisShell;
